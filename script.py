@@ -8,6 +8,8 @@ import logging.config
 from hangout_alert import alert
 
 ###################################################
+model_version = 'ddi_xgboost_v1'
+
 # Log file configuration
 start_time_1=datetime.datetime.now()
 
@@ -18,7 +20,9 @@ current_hour = now.replace(minute=0, second=0, microsecond=0) - datetime.timedel
 current_hour_epoch = int(current_hour.timestamp())
 current_hour = current_hour.strftime("%Y-%m-%d %H:%M:%S")
 
-filename= './log/' + str(current_hour_epoch) + ".log"
+prediction_batch_key = str(model_version) + '_' + str(current_hour_epoch)
+
+filename= './log/' + str(model_version) +'_'+ str(prediction_batch_key) + ".log"
 
 def timetz(*args):
     return datetime.datetime.now(zone).timetuple()
@@ -42,8 +46,8 @@ try:
     start_time = datetime.datetime.now() 
     print('Hello World')
     logging.info('Print function ran successfully in {}'.format(datetime.datetime.now()- start_time))
-except:
-    logging.error('Print function failed')
+except Exception as e:
+    logging.error('Print function failed. Error: '+str(e))
 
 #Post alert in hangout
 alert(filename)
